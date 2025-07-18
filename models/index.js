@@ -29,6 +29,11 @@ BloodRequest.belongsTo(Hospital, { foreignKey: 'hospital_id' });
 City.hasMany(Hospital, { foreignKey: 'city_id' });
 Hospital.belongsTo(City, { foreignKey: 'city_id' });
 
+
+City.hasMany(Donation, { foreignKey: 'city_id' });
+Donation.belongsTo(City, { foreignKey: 'city_id' });
+
+
 module.exports = {
   sequelize,
   User,

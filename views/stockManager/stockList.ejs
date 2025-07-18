@@ -1,0 +1,72 @@
+<h2 class="mb-4 text-center text-danger fw-bold">Blood Stock</h2>
+
+
+<form method="GET" action="/manager/search" class="row g-2 mb-4">
+  <div class="col-md-3">
+    <select name="blood_type" class="form-select">
+      <option value="">All Blood Types</option>
+      <option>A+</option>
+      <option>A-</option>
+      <option>B+</option>
+      <option>B-</option>
+      <option>AB+</option>
+      <option>AB-</option>
+      <option>O+</option>
+      <option>O-</option>
+    </select>
+  </div>
+
+  <div class="col-md-3">
+    <select name="city_id" class="form-select">
+      <option value="">All Cities</option>
+      <% cities.forEach(city => { %>
+        <option value="<%= city.id %>"><%= city.name %></option>
+      <% }) %>
+    </select>
+  </div>
+
+  <div class="col-md-3">
+    <select name="status" class="form-select">
+      <option value="">All Statuses</option>
+      <option value="valid">Valid</option>
+      <option value="expired">Expired</option>
+    </select>
+  </div>
+
+  <div class="col-md-3">
+    <button type="submit" class="btn btn-primary w-100">🔍 Search</button>
+  </div>
+</form>
+
+
+<div class="table-responsive shadow">
+  <table class="table table-bordered text-center align-middle">
+    <thead class="table-dark">
+      <tr>
+        <th>#</th>
+        <th>Blood Type</th>
+        <th>Units</th>
+        <th>City</th>
+        <th>Expiration Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% stock.forEach((item, index) => { %>
+        <tr class="<%= new Date(item.expiry_date) < new Date() ? 'table-danger' : '' %>">
+          <td><%= index + 1 %></td>
+            <td><%= item.blood_type %></td>
+  <td><%= item.quantity %></td>
+          <td><%= item.Donation?.City?.name || 'Unknown' %></td>
+  <td><%= new Date(item.expiration_date).toDateString() %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+
+<div class="mt-3 text-end">
+  <form method="POST" action="/manager/remove-expired">
+    <button type="submit" class="btn btn-danger">🗑 Delete Expired Units</button>
+  </form>
+</div>
+

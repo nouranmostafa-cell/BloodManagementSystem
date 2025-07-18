@@ -12,7 +12,7 @@ const app = express();
 
 
 
-sequelize.sync({ alter: true }) // <--- This updates the table schema
+sequelize.sync() // <--- This updates the table schema
   .then(() => {
     console.log('Database synced');
   })

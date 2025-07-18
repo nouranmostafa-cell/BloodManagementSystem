@@ -1,0 +1,92 @@
+<h2 class="mb-4 text-center text-danger fw-bold">Hospital Blood Requests</h2>
+
+<form method="GET" action="/stock/requests/search" class="row g-3 mb-4">
+  <div class="col-md-3">
+    <select class="form-select" name="blood_type">
+      <option value="">All Blood Types</option>
+      <% bloodTypes.forEach(type => { %>
+        <option value="<%= type %>"><%= type %></option>
+      <% }) %>
+    </select>
+  </div>
+  <div class="col-md-3">
+    <select class="form-select" name="city">
+      <option value="">All Cities</option>
+      <% cities.forEach(city => { %>
+        <option value="<%= city.name %>"><%= city.name %></option>
+      <% }) %>
+    </select>
+  </div>
+  <div class="col-md-3">
+    <select class="form-select" name="urgency">
+      <option value="">All Urgencies</option>
+      <option value="Critical">Critical</option>
+      <option value="Normal">Normal</option>
+    </select>
+  </div>
+  <div class="col-md-3">
+    <button class="btn btn-outline-primary w-100">Filter</button>
+  </div>
+</form>
+
+<div class="table-responsive shadow">
+  <table class="table table-bordered text-center align-middle">
+    <thead class="table-dark">
+      <tr>
+        <th>#</th>
+        <th>Blood Type</th>
+        <th>Quantity</th>
+        <th>Urgency</th>
+        <th>City</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% requests.forEach((req, index) => { %>
+        <tr>
+          <td><%= index + 1 %></td>
+          <td><%= req.blood_type %></td>
+          <td><%= req.quantity %></td>
+          <td>
+            <span class="badge <%= req.patient_status === 'Critical' ? 'bg-danger' : 'bg-secondary' %>">
+              <%= req.patient_status %>
+            </span>
+          </td>
+          <td><%= req.request_city %></td>
+          <td>
+            <span class="badge <%= req.fulfilled ? 'bg-success' : 'bg-warning text-dark' %>">
+              <%= req.fulfilled ? 'Approved' : 'Pending' %>
+            </span>
+          </td>
+          <td>
+            <% if (!req.fulfilled && !req.rejected) { %>
+              <form action="/stock/requests/<%= req.id %>/accept" method="POST" class="d-inline">
+                <button class="btn btn-success btn-sm">✅ Accept</button>
+              </form>
+              <button class="btn btn-danger btn-sm" onclick="rejectRequest(<%= req.id %>)">❌ Reject</button>
+            <% } else if (req.rejected) { %>
+              <span class="text-danger">Rejected: <%= req.rejection_reason %></span>
+            <% } %>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+
+<script>
+  function rejectRequest(id) {
+    const reason = prompt("Enter rejection reason:");
+    if (reason) {
+      fetch(`/stock/requests/${id}/reject`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ reason })
+      }).then(() => location.reload());
+    }
+  }
+</script>
+

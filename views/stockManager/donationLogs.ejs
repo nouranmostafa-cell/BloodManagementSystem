@@ -1,0 +1,30 @@
+<h2 class="mb-4 text-center text-danger fw-bold">Donation Logs</h2>
+
+
+
+<div class="table-responsive shadow">
+  <table class="table table-bordered text-center align-middle">
+    <thead class="table-dark">
+      <tr>
+        <th>#</th>
+        <th>Donor</th>
+        <th>Blood Type</th>
+        <th>Quantity</th>
+        <th>City</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% donations.forEach((log, index) => { %>
+        <tr>
+          <td><%= index + 1 %></td>
+          <td><%= log.Donor.name %></td>
+          <td><%= log.blood_type %></td>
+          <td><%= log.quantity %> units</td>
+          <td><%= log.City.name%></td>
+<td><%= new Date(log.date).toLocaleDateString('en-GB') %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>

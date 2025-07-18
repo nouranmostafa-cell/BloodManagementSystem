@@ -1,5 +1,5 @@
 
-const { Donation, Donor } = require('../models');
+const { Donation, Donor ,City } = require('../models');
 
 const {Op} = require('sequelize');
 const DonationService = require('../services/donationService');
@@ -52,11 +52,22 @@ exports.postRegisterDonor = async (req, res) => {
 exports.getAddDonation = async (req, res) => {
   try {
     const donors = await Donor.findAll({ attributes: ['id', 'national_id', 'name'] });
-    console.log(donors);
-    res.render('staff/add-donation', { donors, message: null, title: 'Add Donation' });
+    const cities = await City.findAll({ attributes: ['id', 'name'] });
+
+    res.render('staff/add-donation', { 
+      donors, 
+      cities,
+      message: null, 
+      title: 'Add Donation' 
+    });
   } catch (err) {
     console.error(err);
-    res.render('staff/add-donation', { donors: [], message: '❌ Error fetching donors.', title: 'Add Donation' });
+    res.render('staff/add-donation', { 
+      donors: [], 
+      cities: [],
+      message: '❌ Error fetching donors or cities.', 
+      title: 'Add Donation' 
+    });
   }
 };
 
@@ -94,28 +105,38 @@ exports.getAddDonation = async (req, res) => {
 
 
 exports.postAddDonation = async (req, res) => {
-  const { donor_id, blood_type, donation_city } = req.body;
+  const { donor_id, blood_type, city_id } = req.body;
 
   try {
-    const result = await DonationService.createDonation({ donor_id, blood_type, donation_city });
+    const result = await DonationService.createDonation({ donor_id, blood_type, city_id });
+
+    const donors = await Donor.findAll({ attributes: ['id', 'national_id', 'name'] });
+    const cities = await City.findAll({ attributes: ['id', 'name'] });
 
     if (!result.success) {
       return res.render('staff/add-donation', {
-        donors: await Donor.findAll({ attributes: ['id', 'national_id', 'name'] }),
+        donors,
+        cities,
         message: `❌ ${result.reason}`,
         title: 'Add Donation'
       });
     }
 
     return res.render('staff/add-donation', {
-      donors: await Donor.findAll({ attributes: ['id', 'national_id', 'name'] }),
+      donors,
+      cities,
       message: '✅ Donation submitted successfully!',
       title: 'Add Donation'
     });
   } catch (err) {
     console.error(err);
+
+    const donors = await Donor.findAll({ attributes: ['id', 'national_id', 'name'] });
+    const cities = await City.findAll({ attributes: ['id', 'name'] });
+
     res.render('staff/add-donation', {
-      donors: await Donor.findAll({ attributes: ['id', 'national_id', 'name'] }),
+      donors,
+      cities,
       message: '❌ Error creating donation.',
       title: 'Add Donation'
     });
