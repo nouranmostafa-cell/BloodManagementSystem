@@ -1,5 +1,6 @@
-<h2 class="mb-4">Hospital Dashboard</h2>
-<div class="list-group">
-  <a href="/requests/new" class="list-group-item list-group-item-action">Request Blood</a>
-  <a href="/requests/my" class="list-group-item list-group-item-action">View My Requests</a>
-</div>
+<h2>Hospital Dashboard</h2>
+<p>Total Requests: <strong><%= total %></strong></p>
+<p>Fulfilled Requests: <strong><%= fulfilled %></strong></p>
+
+<a class="btn btn-success" href="/hospital/requestForm">New Request</a>
+<a class="btn btn-info" href="/hospital/my-requests">My Requests</a>

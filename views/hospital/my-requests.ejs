@@ -1,0 +1,44 @@
+<h2 class="mb-4 text-center text-danger fw-bold">My Blood Requests</h2>
+
+<div class="table-responsive shadow-lg rounded">
+  <table class="table table-bordered table-hover align-middle text-center">
+    <thead class="table-dark">
+      <tr>
+        <th>#</th>
+        <th>Blood Type</th>
+        <th>Quantity</th>
+        <th>Status</th>
+        <th>Urgency</th>
+        <th>City</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% requests.forEach((req, index) => { %>
+        <tr>
+          <td><%= index + 1 %></td>
+          <td class="fw-bold text-danger fs-5"><%= req.blood_type %></td>
+          <td><%= req.quantity %> units</td>
+          <td>
+            <span class="badge <%= req.fulfilled ? 'bg-success' : 'bg-warning text-dark' %>">
+              <%= req.fulfilled ? 'Approved' : 'Pending' %>
+            </span>
+          </td>
+          <td>
+            <span class="badge <%= req.patient_status === 'Critical' ? 'bg-danger' : 'bg-secondary' %>">
+              <%= req.patient_status %>
+            </span>
+          </td>
+          <td><%= req.request_city %></td>
+          <td><%= req.createdAt.toDateString() %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+
+<div class="mt-4 text-center">
+  <a href="/hospital/dashboard" class="btn btn-outline-primary">
+    ← Back to Dashboard
+  </a>
+</div>
