@@ -1,0 +1,47 @@
+<h2 class="mb-4">Donation Test Results</h2>
+
+<table class="table table-bordered table-hover align-middle">
+  <thead class="table-primary">
+    <tr>
+      <th>Donor Name</th>
+      <th>Donation ID</th>
+      <th>Test Result</th>
+      <th>Status</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% donations.forEach(d => { %>
+      <tr>
+        <td><%= d.Donor.name %></td>
+        <td><%= d.id %></td>
+
+        <% if (d.status === 'pending_test') { %>
+          <form method="POST" action="/staff/update-donation-result">
+            <input type="hidden" name="donation_id" value="<%= d.id %>">
+            <td>
+              <select name="virus_test_result" class="form-select form-select-sm" required>
+                <option value="negative">Negative</option>
+                <option value="positive">Positive</option>
+              </select>
+            </td>
+            <td><span class="badge bg-warning text-dark">Pending Test</span></td>
+            <td>
+              <button type="submit" class="btn btn-sm btn-success">Update</button>
+            </td>
+          </form>
+        <% } else { %>
+          <td><%= d.virus_test_result %></td>
+          <td>
+            <% if (d.status === 'accepted') { %>
+              <span class="badge bg-success">Accepted</span>
+            <% } else if (d.status === 'rejected') { %>
+              <span class="badge bg-danger">Rejected</span>
+            <% } %>
+          </td>
+          <td>—</td>
+        <% } %>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>

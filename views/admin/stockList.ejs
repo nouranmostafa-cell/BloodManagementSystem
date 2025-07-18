@@ -1,0 +1,20 @@
+<% layout('layouts/main') -%>
+<h2 class="mb-4">Blood Stock</h2>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Blood Type</th>
+      <th>City</th>
+      <th>Expiration Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% stock.forEach(item => { %>
+      <tr>
+        <td><%= item.blood_type %></td>
+        <td><%= item.city %></td>
+        <td><%= item.expiration_date.toDateString() %></td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>

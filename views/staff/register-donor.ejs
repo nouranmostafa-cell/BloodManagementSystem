@@ -1,0 +1,14 @@
+<h2>Register New Donor</h2>
+<form action="/staff/register-donor" method="POST">
+  <input type="text" name="national_id" placeholder="National ID" required /><br />
+  <input type="text" name="name" placeholder="Full Name" required /><br />
+  <input type="text" name="city" placeholder="City" required /><br />
+  <input type="email" name="email" placeholder="Email" required /><br />
+  <button type="submit">Register Donor</button>
+</form>
+
+<% if (message) { %>
+  <p><%= message %></p>
+<% } %>
+
+<a href="/staff/dashboard">← Back to Dashboard</a>

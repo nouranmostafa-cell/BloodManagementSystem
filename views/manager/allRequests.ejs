@@ -1,0 +1,24 @@
+<% layout('layouts/main') -%>
+<h2 class="mb-4">All Blood Requests</h2>
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th>Hospital</th>
+      <th>Blood Type</th>
+      <th>City</th>
+      <th>Patient Status</th>
+      <th>Handled</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% requests.forEach(req => { %>
+      <tr>
+        <td><%= req.hospital_name %></td>
+        <td><%= req.blood_type %></td>
+        <td><%= req.request_city %></td>
+        <td><%= req.patient_status %></td>
+        <td><%= req.handled ? '✅' : '❌' %></td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
