@@ -24,7 +24,13 @@
 
   <div class="mb-3">
     <label>City</label>
-    <input type="text" name="request_city" class="form-control" required>
+<!-- Disabled dropdown for display -->
+<select disabled>
+  <option selected><%= hospital.City.name %></option>
+</select>
+
+<!-- Hidden input to actually submit the city_id -->
+<input type="hidden" name="city_id" value="<%= hospital.City.id %>">
   </div>
 
   <button type="submit" class="btn btn-primary">Submit Request</button>

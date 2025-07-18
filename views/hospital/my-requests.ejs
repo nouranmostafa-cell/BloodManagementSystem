@@ -29,7 +29,8 @@
               <%= req.patient_status %>
             </span>
           </td>
-          <td><%= req.request_city %></td>
+          <td><%= req.Hospital.City.name %></td>
+
           <td><%= req.createdAt.toDateString() %></td>
         </tr>
       <% }) %>
