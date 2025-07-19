@@ -1,5 +1,43 @@
 <h2 class="mb-4 text-center text-danger fw-bold">Donation Logs</h2>
 
+<form method="GET" action="/manager/donations/search" class="row g-3 mb-4">
+  <div class="col-md-3">
+    <label class="form-label">Blood Type</label>
+    <select name="blood_type" class="form-select">
+      <option value="">All Types</option>
+      <option value="A+">A+</option>
+      <option value="A-">A-</option>
+      <option value="B+">B+</option>
+      <option value="B-">B-</option>
+      <option value="AB+">AB+</option>
+      <option value="AB-">AB-</option>
+      <option value="O+">O+</option>
+      <option value="O-">O-</option>
+    </select>
+  </div>
+
+  <div class="col-md-3">
+    <label class="form-label">Donor Name</label>
+    <input type="text" name="donor_name" class="form-control" placeholder="Search by donor name">
+  </div>
+
+  <div class="col-md-3">
+    <label class="form-label">City</label>
+    <select name="city_id" class="form-select">
+      <option value="">All Cities</option>
+      <% cities.forEach(city => { %>
+        <option value="<%= city.id %>"><%= city.name %></option>
+      <% }) %>
+    </select>
+  </div>
+
+  <div class="col-md-3">
+    <label class="form-label">&nbsp;</label>
+    <div>
+      <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+  </div>
+</form>
 
 
 <div class="table-responsive shadow">
@@ -22,7 +60,7 @@
           <td><%= log.blood_type %></td>
           <td><%= log.quantity %> units</td>
           <td><%= log.City.name%></td>
-<td><%= new Date(log.date).toLocaleDateString('en-GB') %></td>
+          <td><%= new Date(log.createdAt).toLocaleDateString('en-GB') %></td>
         </tr>
       <% }) %>
     </tbody>

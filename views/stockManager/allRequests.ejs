@@ -1,33 +1,51 @@
 <h2 class="mb-4 text-center text-danger fw-bold">Hospital Blood Requests</h2>
 
-<form method="GET" action="/stock/requests/search" class="row g-3 mb-4">
+<% if (locals.error) { %>
+  <div class="alert alert-danger"><%= error %></div>
+<% } %>
+
+<% if (locals.success) { %>
+  <div class="alert alert-success"><%= success %></div>
+<% } %>
+
+<form method="GET" action="/manager/requests/search" class="row g-3 mb-4">
   <div class="col-md-3">
     <select class="form-select" name="blood_type">
       <option value="">All Blood Types</option>
       <% bloodTypes.forEach(type => { %>
-        <option value="<%= type %>"><%= type %></option>
+        <option value="<%= type %>" <%= (locals.selected?.blood_type === type) ? 'selected' : '' %>><%= type %></option>
       <% }) %>
     </select>
   </div>
+
   <div class="col-md-3">
-    <select class="form-select" name="city">
+    <select class="form-select" name="city_id">
       <option value="">All Cities</option>
       <% cities.forEach(city => { %>
-        <option value="<%= city.name %>"><%= city.name %></option>
+        <option value="<%= city.id %>" <%= (locals.selected?.city == city.id) ? 'selected' : '' %>><%= city.name %></option>
       <% }) %>
     </select>
   </div>
+
   <div class="col-md-3">
-    <select class="form-select" name="urgency">
-      <option value="">All Urgencies</option>
-      <option value="Critical">Critical</option>
-      <option value="Normal">Normal</option>
+    <select class="form-select" name="patient_status">
+      <option value="">All Statuses</option>
+      <option value="Immediate" <%= (locals.selected?.patient_status === 'Immediate') ? 'selected' : '' %>>Immediate</option>
+      <option value="Urgent" <%= (locals.selected?.patient_status === 'Urgent') ? 'selected' : '' %>>Urgent</option>
+      <option value="Normal" <%= (locals.selected?.patient_status === 'Normal') ? 'selected' : '' %>>Normal</option>
     </select>
   </div>
+
   <div class="col-md-3">
     <button class="btn btn-outline-primary w-100">Filter</button>
   </div>
 </form>
+
+<div class="mb-3">
+  <form action="/manager/requests/process-matches" method="POST" class="d-inline">
+    <button type="submit" class="btn btn-primary">Process Matches</button>
+  </form>
+</div>
 
 <div class="table-responsive shadow">
   <table class="table table-bordered text-center align-middle">
@@ -53,10 +71,10 @@
               <%= req.patient_status %>
             </span>
           </td>
-          <td><%= req.request_city %></td>
-          <td>
-            <span class="badge <%= req.fulfilled ? 'bg-success' : 'bg-warning text-dark' %>">
-              <%= req.fulfilled ? 'Approved' : 'Pending' %>
+<td><%= req.Hospital?.City?.name || 'Unknown' %></td>
+            <td>
+            <span class="badge <%= req.fulfilled ? 'bg-success' : req.rejected ? 'bg-danger' : 'bg-warning text-dark' %>">
+              <%= req.fulfilled ? 'Approved' : req.rejected ? 'Rejected' : 'Pending' %>
             </span>
           </td>
           <td>
@@ -76,17 +94,20 @@
 </div>
 
 <script>
-  function rejectRequest(id) {
-    const reason = prompt("Enter rejection reason:");
-    if (reason) {
-      fetch(`/stock/requests/${id}/reject`, {
+async function rejectRequest(id) {
+  const reason = prompt("Enter rejection reason:");
+  if (reason) {
+    try {
+      const response = await fetch(`/manager/requests/${id}/reject`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ reason })
-      }).then(() => location.reload());
+      });
+      if (!response.ok) throw new Error('Failed to reject request');
+      window.location.reload();
+    } catch (error) {
+      alert('Error: ' + error.message);
     }
   }
+}
 </script>
-
